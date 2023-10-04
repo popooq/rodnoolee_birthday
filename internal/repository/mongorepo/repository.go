@@ -56,9 +56,9 @@ func (m *mongoRepo) GetAllBirthdays() ([]repository.Birthday, error) {
 	return birthdays, err
 }
 
-func (m *mongoRepo) UpdateBirthday(rodnoolya string, birthday repository.Birthday) error {
+func (m *mongoRepo) UpdateBirthday(birthday repository.Birthday) error {
 	_, err := m.collection.UpdateOne(m.context, bson.D{
-		{Key: "Rodnoolya", Value: rodnoolya},
+		{Key: "Rodnoolya", Value: birthday.Rodnoolya},
 	}, birthday)
 
 	return err
