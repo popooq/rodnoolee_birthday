@@ -59,7 +59,20 @@ func (m *mongoRepo) GetAllBirthdays() ([]repository.Birthday, error) {
 func (m *mongoRepo) UpdateBirthday(birthday repository.Birthday) error {
 	_, err := m.collection.UpdateOne(m.context, bson.D{
 		{Key: "Rodnoolya", Value: birthday.Rodnoolya},
-	}, birthday)
+	}, bson.D{
+		{Key: "$set", Value: bson.D{
+			{Key: "Birthday", Value: birthday.Birthday},
+		}},
+	})
 
+	return err
+}
+
+func (m *mongoRepo) DeleteAllVeryDangerous() error {
+	filter := bson.D{}
+	_, err := m.collection.DeleteMany(m.context, filter)
+	if err != nil {
+		return err
+	}
 	return err
 }

@@ -1,21 +1,24 @@
 package allbirthdays
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/popooq/rodnoolee_birthday/internal/repository"
 )
 
-func AllBirthdays(w http.ResponseWriter, r *http.Request) {
-	birthdays, err := repository.GetAllBirthdays()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("bruh"))
+type allBirthdays struct {
+	repo repository.UserRepo
+}
+
+func New(repo repository.UserRepo) AllBirthdays {
+	return &allBirthdays{
+		repo: repo,
 	}
-	listOfBirthdays := fmt.Sprintf("%+v", birthdays)
+}
 
-	w.Header().Set("Content-Type", "text/plain")
+func (a *allBirthdays) Handle() ([]repository.Birthday, error) {
+	birthdays, err := a.repo.GetAllBirthdays()
+	if err != nil {
+		return nil, err
+	}
 
-	w.WriteHeader(http.StatusOK)
-
-	w.Write([]byte(listOfBirthdays))
+	return birthdays, nil
 }

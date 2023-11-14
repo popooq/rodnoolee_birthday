@@ -1,30 +1,41 @@
 package addbirthday
 
 import (
-	"encoding/json"
-	"io"
-	"log"
-	"net/http"
+	"time"
 
-	"github.com/popooq/rodnoolee_birthday/internal/types"
+	"github.com/popooq/rodnoolee_birthday/internal/domain"
+	"github.com/popooq/rodnoolee_birthday/internal/repository"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func InsertBirthday(w http.ResponseWriter, r *http.Request) {
-	var birthday types.Birthday
+const shortForm = time.DateOnly
 
-	body, err := io.ReadAll(r.Body)
+type addBirthday struct {
+	repo repository.UserRepo
+}
+
+func New(repo repository.UserRepo) AddBirthday {
+	return &addBirthday{
+		repo: repo,
+	}
+}
+
+func (a *addBirthday) Handle(message domain.TgMessage) error {
+	dt, err := time.Parse(shortForm, message.MessageText)
 	if err != nil {
-		log.Printf("error during ReadAll: %s", err)
+		return err
+	}
+	mdt := primitive.NewDateTimeFromTime(dt)
+
+	birthday := repository.Birthday{
+		Rodnoolya: message.Username,
+		Birthday:  mdt,
 	}
 
-	err = json.Unmarshal(body, birthday)
-
-	err = repository.InsertBirthday(birthday)
+	err = a.repo.InsertBirthday(birthday)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		return err
 	}
 
-	w.Header().Set("Content-Type", "text/plain")
-
-	w.WriteHeader(http.StatusOK)
+	return nil
 }

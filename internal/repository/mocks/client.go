@@ -34,6 +34,20 @@ func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
 }
 
+// DeleteAllVeryDangerous mocks base method.
+func (m *MockUserRepo) DeleteAllVeryDangerous() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllVeryDangerous")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllVeryDangerous indicates an expected call of DeleteAllVeryDangerous.
+func (mr *MockUserRepoMockRecorder) DeleteAllVeryDangerous() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllVeryDangerous", reflect.TypeOf((*MockUserRepo)(nil).DeleteAllVeryDangerous))
+}
+
 // GetAllBirthdays mocks base method.
 func (m *MockUserRepo) GetAllBirthdays() ([]repository.Birthday, error) {
 	m.ctrl.T.Helper()

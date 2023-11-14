@@ -14,4 +14,5 @@ type UserRepo interface {
 	InsertBirthday(birthday Birthday) error
 	GetAllBirthdays() ([]Birthday, error)
 	UpdateBirthday(birthday Birthday) error
+	DeleteAllVeryDangerous() error
 }
